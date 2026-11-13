@@ -1,0 +1,16 @@
+# Private graders for the public vgi.agent_test_tasks in the worker's catalog metadata.
+# `vgi-lint lint --ai` runs an agent on each prompt and grades it with reference_sql/check_sql.
+# See https://github.com/Query-farm/vgi-lint-check (VGI920).
+tasks:
+  - name: og_title_from_html
+    reference_sql: >-
+      SELECT opengraph.main.parse_opengraph('<head><title>Home</title><meta property="og:title" content="Spring Sale"></head>').title AS title
+  - name: absolute_image
+    reference_sql: >-
+      SELECT opengraph.main.parse_opengraph('<meta property="og:image" content="../img/42.jpg">', 'https://shop.example.com/items/42').image AS image
+  - name: count_meta_properties
+    reference_sql: >-
+      SELECT count(*) AS tags FROM (SELECT unnest(opengraph.main.opengraph_tags('<meta property="article:tag" content="duckdb"><meta property="article:tag" content="sql"><meta property="og:type" content="article">')) AS t) WHERE t.property = 'article:tag'
+  # Live network: https://example.com serves <title>Example Domain</title>.
+  - name: fetch_page_title
+    reference_sql: SELECT opengraph.main.fetch_opengraph('https://example.com').title AS title

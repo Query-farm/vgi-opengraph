@@ -1,0 +1,118 @@
+# name: test/sql/opengraph.test
+# description: SQL-level tests for the opengraph worker, run through DuckDB by ci/run-integration.sh
+# group: [opengraph]
+
+require vgi
+
+require-env OPENGRAPH_WORKER
+
+require-env OPENGRAPH_SITE
+
+statement ok
+ATTACH 'opengraph' (TYPE vgi, LOCATION '{OPENGRAPH_WORKER}');
+
+# ------------------------------------------------------------ parse_opengraph
+
+query TTTT
+SELECT og.title, og.type, og.locale, og.image
+FROM (SELECT opengraph.main.parse_opengraph('<html lang="en"><head><title>Fallback</title>
+  <meta property="og:title" content="Rock &amp; Roll"><meta property="og:type" content="music.song">
+  <meta property="og:image" content="/cover.png"></head></html>') AS og);
+----
+Rock & Roll	music.song	en	/cover.png
+
+# Plain HTML fallbacks when there are no og:* tags.
+query TT
+SELECT og.title, og.description
+FROM (SELECT opengraph.main.parse_opengraph('<title> Just  a title </title><meta name="description" content="Desc">') AS og);
+----
+Just a title	Desc
+
+# Image dimensions are INTEGERs; images is a list in document order.
+query IIIT
+SELECT og.image_width, og.image_height, len(og.images), og.images[2]
+FROM (SELECT opengraph.main.parse_opengraph('<meta property="og:image" content="a.png">
+  <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+  <meta property="og:image" content="b.png">') AS og);
+----
+1200	630	2	b.png
+
+query T
+SELECT typeof(opengraph.main.parse_opengraph('').image_width);
+----
+INTEGER
+
+# Base URL overload resolves relative URLs.
+query TT
+SELECT og.image, og.url
+FROM (SELECT opengraph.main.parse_opengraph('<meta property="og:image" content="../img/42.jpg">
+  <link rel="canonical" href="/items/42">', 'https://shop.example.com/items/42') AS og);
+----
+https://shop.example.com/img/42.jpg	https://shop.example.com/items/42
+
+# NULL in, NULL out; empty documents give an all-NULL struct.
+query TT
+SELECT opengraph.main.parse_opengraph(NULL) IS NULL, opengraph.main.parse_opengraph('nothing here').title IS NULL;
+----
+true	true
+
+# Vectorized over a column, with a per-row base URL.
+query T
+SELECT opengraph.main.parse_opengraph(html, base).image
+FROM (VALUES ('<meta property="og:image" content="x.png">', 'https://a.test/p/'),
+             ('<meta property="og:image" content="x.png">', 'https://b.test/'),
+             ('<meta property="og:image" content="x.png">', NULL)) AS t(html, base)
+ORDER BY 1;
+----
+https://a.test/p/x.png
+https://b.test/x.png
+x.png
+
+# ------------------------------------------------------------- opengraph_tags
+
+query TT
+SELECT t.property, t.content
+FROM (SELECT unnest(opengraph.main.opengraph_tags('<meta property="article:tag" content="duckdb">
+  <meta property="article:tag" content="sql"><META NAME="Twitter:Card" CONTENT="summary">')) AS t)
+ORDER BY ALL;
+----
+article:tag	duckdb
+article:tag	sql
+twitter:card	summary
+
+query I
+SELECT len(opengraph.main.opengraph_tags('<p>no meta</p>'));
+----
+0
+
+# ------------------------------------------------------------ fetch_opengraph
+
+query TTIT
+SELECT og.title, og.site_name, og.http_status, og.error
+FROM (SELECT opengraph.main.fetch_opengraph('{OPENGRAPH_SITE}/article.html') AS og);
+----
+Ducks & Data: A Field Guide	The Pond	200	NULL
+
+# Redirects are followed and relative URLs resolve against the final URL.
+query TT
+SELECT og.final_url = '{OPENGRAPH_SITE}/article.html', og.image = '{OPENGRAPH_SITE}/img/hero.jpg'
+FROM (SELECT opengraph.main.fetch_opengraph('{OPENGRAPH_SITE}/redirect') AS og);
+----
+true	true
+
+# Failures are reported per row and don't fail the query.
+query TIT
+SELECT path, og.http_status, og.error
+FROM (SELECT path, opengraph.main.fetch_opengraph(CASE WHEN path LIKE '/%' THEN '{OPENGRAPH_SITE}' || path ELSE path END) AS og
+      FROM (VALUES ('/missing'), ('/image.png'), ('/plain.html'), ('ftp://x.test/')) AS t(path))
+ORDER BY path;
+----
+/image.png	200	not an HTML page (content type image/png)
+/missing	404	HTTP 404 Not Found
+/plain.html	200	NULL
+ftp://x.test/	NULL	unsupported URL scheme 'ftp': only http and https are fetched
+
+query T
+SELECT opengraph.main.fetch_opengraph(NULL) IS NULL;
+----
+true
