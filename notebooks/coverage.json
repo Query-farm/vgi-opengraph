@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "catalogs": {
+    "released": {
+      "path": "coverage/catalog-released.json",
+      "sha256": "0fa5ca6acf0fac9db795d37e6fd277dba220eef0e0cb0e31ddc3f2b4b1ae8e7e",
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root/notebooks_earthquakes",
+        "reviewed_at": "2026-11-14T21:26:01.646465+00:00",
+        "catalog_sha256": "0fa5ca6acf0fac9db795d37e6fd277dba220eef0e0cb0e31ddc3f2b4b1ae8e7e",
+        "notes": "Complete actual release catalog: four scalar rows, three named public surfaces; both parse overloads retained; no tables/views. Release/current main are same source commit and dependencies. Current-compatible mappings retain explicit zero separately executed current-main notebook runtime."
+      }
+    },
+    "current": {
+      "path": "coverage/catalog-current.json",
+      "sha256": "8ae4b75af2dd7d7709038ae3311a1ad03028eafb36746176d764875da666ef45",
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root/notebooks_earthquakes",
+        "reviewed_at": "2026-11-14T21:26:01.646465+00:00",
+        "catalog_sha256": "8ae4b75af2dd7d7709038ae3311a1ad03028eafb36746176d764875da666ef45",
+        "notes": "Complete actual release catalog: four scalar rows, three named public surfaces; both parse overloads retained; no tables/views. Release/current main are same source commit and dependencies. Current-compatible mappings retain explicit zero separately executed current-main notebook runtime."
+      }
+    }
+  },
+  "notebooks": [
+    {
+      "path": "01_audit_fallbacks_before_publishing_previews.ipynb",
+      "sha256": "10dc87f1e67fc741c20e0afbcfc9f0bc9f125afb9fdf13ec59199a4e71aac022",
+      "execution": {
+        "path": "coverage/run-01.json",
+        "sha256": "42051aca25cc03a10d1de66998914d821ae7a396321ed9a64f79766cfa3a48cb"
+      }
+    },
+    {
+      "path": "02_keep_fetch_outcomes_before_selecting_previews.ipynb",
+      "sha256": "1214919e01553be7ee21e63d25ff301df796ca9ed5f01ced8c3f74432af3850f",
+      "execution": {
+        "path": "coverage/run-02.json",
+        "sha256": "c203d7daec576c22e7a839ec82aca649ad190803e6a179c7aa7cdef46e755639"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "object": {
+        "schema": "main",
+        "name": "parse_opengraph"
+      },
+      "notebook": "01_audit_fallbacks_before_publishing_previews.ipynb",
+      "sql": [
+        {
+          "cell": "connection",
+          "reference": "opengraph.main.parse_opengraph"
+        }
+      ],
+      "narrative_cells": [
+        "attach-story",
+        "evidence-story",
+        "policy-story"
+      ],
+      "result_cells": [
+        "parsed-finding",
+        "evidence-finding",
+        "policy-finding"
+      ],
+      "interpretation_cells": [
+        "parsed-finding",
+        "evidence-finding",
+        "policy-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root/notebooks_earthquakes",
+        "reviewed_at": "2026-11-14T21:26:01.646465+00:00",
+        "notebook_sha256": "10dc87f1e67fc741c20e0afbcfc9f0bc9f125afb9fdf13ec59199a4e71aac022",
+        "catalog_sha256": [
+          "0fa5ca6acf0fac9db795d37e6fd277dba220eef0e0cb0e31ddc3f2b4b1ae8e7e",
+          "8ae4b75af2dd7d7709038ae3311a1ad03028eafb36746176d764875da666ef45"
+        ],
+        "purpose": "Keep all stored inputs and distinguish fallback field availability, relative URL strings, first-image properties and a declared selection rule.",
+        "finding": "Nine records include eight supplied HTML inputs. Five OG, one Twitter and one HTML title coexist with missing/unavailable cases. Explicit-title requirement changes accepted records 5\u21923 while parsed fingerprint, availability matrix, conflict rows and ordered images remain fixed. First image retains its own dimensions; no URL resource or platform rendering is validated."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "opengraph_tags"
+      },
+      "notebook": "01_audit_fallbacks_before_publishing_previews.ipynb",
+      "sql": [
+        {
+          "cell": "connection",
+          "reference": "opengraph.main.opengraph_tags"
+        }
+      ],
+      "narrative_cells": [
+        "evidence-story",
+        "policy-story"
+      ],
+      "result_cells": [
+        "evidence-finding",
+        "policy-finding"
+      ],
+      "interpretation_cells": [
+        "evidence-finding",
+        "policy-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root/notebooks_earthquakes",
+        "reviewed_at": "2026-11-14T21:26:01.646465+00:00",
+        "notebook_sha256": "10dc87f1e67fc741c20e0afbcfc9f0bc9f125afb9fdf13ec59199a4e71aac022",
+        "catalog_sha256": [
+          "0fa5ca6acf0fac9db795d37e6fd277dba220eef0e0cb0e31ddc3f2b4b1ae8e7e",
+          "8ae4b75af2dd7d7709038ae3311a1ad03028eafb36746176d764875da666ef45"
+        ],
+        "purpose": "Use retained tag order and distinct values to detect title conflicts and distinguish explicit OG tags from populated fallback summaries.",
+        "finding": "One page has two distinct OG titles while the summary keeps the first; that page remains excluded under both policies. A Twitter or HTML title fallback does not create an OG tag. All nine source records survive left joins, including a document without tags and NULL input."
+      }
+    },
+    {
+      "object": {
+        "schema": "main",
+        "name": "fetch_opengraph"
+      },
+      "notebook": "02_keep_fetch_outcomes_before_selecting_previews.ipynb",
+      "sql": [
+        {
+          "cell": "connection",
+          "reference": "opengraph.main.fetch_opengraph"
+        }
+      ],
+      "narrative_cells": [
+        "attach-story",
+        "response-story",
+        "selection-story"
+      ],
+      "result_cells": [
+        "request-finding",
+        "response-finding",
+        "selection-finding"
+      ],
+      "interpretation_cells": [
+        "request-finding",
+        "response-finding",
+        "selection-finding"
+      ],
+      "review": {
+        "status": "approved",
+        "reviewer": "Codex /root/notebooks_earthquakes",
+        "reviewed_at": "2026-11-14T21:26:01.646465+00:00",
+        "notebook_sha256": "1214919e01553be7ee21e63d25ff301df796ca9ed5f01ced8c3f74432af3850f",
+        "catalog_sha256": [
+          "0fa5ca6acf0fac9db795d37e6fd277dba220eef0e0cb0e31ddc3f2b4b1ae8e7e",
+          "8ae4b75af2dd7d7709038ae3311a1ad03028eafb36746176d764875da666ef45"
+        ],
+        "purpose": "Materialize real worker HTTP reads once against an explicit finite loopback site, retain every failure/missing input and compare title selection with independent request accounting.",
+        "finding": "Nine URL input rows cause six observed requests on six authored paths; repeated direct URL is fetched once within this batch and redirect consumes two requests. Four errors include a 200 non-HTML response, while successful metadata-empty HTML stays separate. Requiring direct response changes selected rows 3\u21922 without changing normalized responses or request audit. Relative image resolves against final URL; no image fetch occurs."
+      }
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "query": "SELECT * FROM duckdb_functions() WHERE database_name='opengraph' ORDER BY schema_name,function_name,parameter_types",
+  "captured_at": "2026-11-14T21:18:05.178383+00:00",
+  "columns": [
+    "database_name",
+    "database_oid",
+    "schema_name",
+    "function_name",
+    "alias_of",
+    "function_type",
+    "description",
+    "comment",
+    "tags",
+    "return_type",
+    "parameters",
+    "parameter_types",
+    "varargs",
+    "macro_definition",
+    "has_side_effects",
+    "internal",
+    "extension_name",
+    "function_oid",
+    "examples",
+    "stability",
+    "categories"
+  ],
+  "rows": [
+    [
+      "opengraph",
+      "22592",
+      "main",
+      "fetch_opengraph",
+      null,
+      "scalar",
+      "Download a web page and return its Open Graph metadata as a STRUCT, with HTTP status and error.",
+      null,
+      {
+        "vgi.category": "fetch",
+        "vgi.doc_llm": "Fetch each URL over HTTP(S) (following redirects, reading only the document head) and return the same `STRUCT` as parse_opengraph plus final_url (after redirects; relative URLs are resolved against it), http_status `INTEGER`, content_type and error. A page that can't be read does NOT fail the query: its row has error set (e.g. 'HTTP 404 Not Found', 'timed out after 10000 ms', 'not an HTML page \u2026') and NULL metadata, so filter with `WHERE og.error IS NULL`. URLs in one batch are fetched concurrently (8 at a time) and duplicates are fetched once; 429/5xx responses are retried. Tune with the environment variables OPENGRAPH_TIMEOUT_MS, OPENGRAPH_MAX_BYTES, OPENGRAPH_CONCURRENCY and OPENGRAPH_USER_AGENT. Results depend on the live web; if you already have the HTML, use parse_opengraph(html, base_url) instead.",
+        "vgi.doc_md": "## fetch_opengraph(url)\n\nDownload pages and summarize their link-preview metadata. Adds `final_url`, `http_status`, `content_type` and `error` to the `parse_opengraph` fields. Failures are reported in `error` rather than failing the query.",
+        "vgi.example_queries": "[{\"description\":\"Unfurl a link the way a chat app would\",\"sql\":\"SELECT og.title, og.site_name, og.image FROM (SELECT opengraph.main.fetch_opengraph('https://github.com/duckdb/duckdb') AS og) WHERE og.error IS NULL\"}]",
+        "vgi.keywords": "[\"fetch url\",\"link preview\",\"unfurl\",\"scrape\",\"crawl\",\"open graph\",\"og:image\",\"page title\",\"http\",\"website metadata\"]",
+        "vgi.title": "Fetch Open Graph metadata"
+      },
+      "STRUCT(title VARCHAR, description VARCHAR, \"type\" VARCHAR, url VARCHAR, site_name VARCHAR, locale VARCHAR, image VARCHAR, image_alt VARCHAR, image_width INTEGER, image_height INTEGER, images VARCHAR[], video VARCHAR, audio VARCHAR, twitter_card VARCHAR, twitter_site VARCHAR, twitter_creator VARCHAR, canonical_url VARCHAR, favicon_url VARCHAR, oembed_url VARCHAR, final_url VARCHAR, http_status INTEGER, content_type VARCHAR, \"error\" VARCHAR)",
+      [
+        "url"
+      ],
+      [
+        "VARCHAR"
+      ],
+      null,
+      null,
+      false,
+      true,
+      null,
+      22596,
+      [
+        "SELECT og.title, og.site_name, og.image FROM (SELECT opengraph.main.fetch_opengraph('https://github.com/duckdb/duckdb') AS og) WHERE og.error IS NULL"
+      ],
+      "CONSISTENT",
+      []
+    ],
+    [
+      "opengraph",
+      "22592",
+      "main",
+      "opengraph_tags",
+      null,
+      "scalar",
+      "List every <meta> property/name and content pair in an HTML document, in document order.",
+      null,
+      {
+        "vgi.category": "parse",
+        "vgi.doc_llm": "Return a `LIST(STRUCT(property VARCHAR, content VARCHAR))` with every <meta> tag that has a property= or name= attribute and a content= attribute, in document order, duplicates kept. property is lower-cased (og:title, og:image:width, article:published_time, twitter:card, description, \u2026); content is entity-decoded. Use it for properties the parse_opengraph summary doesn't carry (article:*, product:*, og:video:width, multiple og:locale:alternate): unnest the list and filter on t.property. No network access.",
+        "vgi.doc_md": "## opengraph_tags(html)\n\nEvery `<meta property|name=\u2026 content=\u2026>` as a list of `{property, content}` structs. `unnest` it to filter, pivot or count properties.",
+        "vgi.example_queries": "[{\"description\":\"Unnest the raw meta tags of a document\",\"sql\":\"SELECT t.property, t.content FROM (SELECT unnest(opengraph.main.opengraph_tags('<meta property=\\\"og:type\\\" content=\\\"article\\\"><meta property=\\\"article:author\\\" content=\\\"Ada\\\">')) AS t) ORDER BY t.property\"},{\"description\":\"Audit where each page's preview title comes from: check the raw tags from opengraph_tags for og:title or twitter:title, else parse_opengraph fell back to the <title> element\",\"sql\":\"WITH pages(page_url, html) AS (VALUES ('https://shop.example.com/a', '<title>Shop A</title><meta property=\\\"og:title\\\" content=\\\"Spring Sale\\\">'), ('https://shop.example.com/b', '<title>Shop B</title><meta name=\\\"twitter:title\\\" content=\\\"B on Twitter\\\">'), ('https://shop.example.com/c', '<title>Shop C</title>')) SELECT page_url, preview_title, CASE WHEN list_contains(props, 'og:title') THEN 'og:title' WHEN list_contains(props, 'twitter:title') THEN 'twitter:title' ELSE '<title> fallback' END AS title_source FROM (SELECT page_url, opengraph.main.parse_opengraph(html).title AS preview_title, [t.property FOR t IN opengraph.main.opengraph_tags(html)] AS props FROM pages) ORDER BY page_url\"}]",
+        "vgi.executable_examples": "[{\"description\":\"Raw meta tags, one row each\",\"sql\":\"SELECT t.property, t.content FROM (SELECT unnest(opengraph.main.opengraph_tags('<meta property=\\\"og:type\\\" content=\\\"article\\\"><meta property=\\\"article:author\\\" content=\\\"Ada\\\">')) AS t) ORDER BY t.property\",\"expected_result\":[[\"article:author\",\"Ada\"],[\"og:type\",\"article\"]]}]",
+        "vgi.keywords": "[\"meta tags\",\"open graph\",\"og:\",\"twitter:\",\"article:published_time\",\"property\",\"content\",\"unnest\",\"raw metadata\"]",
+        "vgi.title": "List meta tags"
+      },
+      "STRUCT(property VARCHAR, \"content\" VARCHAR)[]",
+      [
+        "html"
+      ],
+      [
+        "VARCHAR"
+      ],
+      null,
+      null,
+      false,
+      true,
+      null,
+      22597,
+      [
+        "SELECT t.property, t.content FROM (SELECT unnest(opengraph.main.opengraph_tags('<meta property=\"og:type\" content=\"article\"><meta property=\"article:author\" content=\"Ada\">')) AS t) ORDER BY t.property",
+        "WITH pages(page_url, html) AS (VALUES ('https://shop.example.com/a', '<title>Shop A</title><meta property=\"og:title\" content=\"Spring Sale\">'), ('https://shop.example.com/b', '<title>Shop B</title><meta name=\"twitter:title\" content=\"B on Twitter\">'), ('https://shop.example.com/c', '<title>Shop C</title>')) SELECT page_url, preview_title, CASE WHEN list_contains(props, 'og:title') THEN 'og:title' WHEN list_contains(props, 'twitter:title') THEN 'twitter:title' ELSE '<title> fallback' END AS title_source FROM (SELECT page_url, opengraph.main.parse_opengraph(html).title AS preview_title, [t.property FOR t IN opengraph.main.opengraph_tags(html)] AS props FROM pages) ORDER BY page_url"
+      ],
+      "CONSISTENT",
+      []
+    ],
+    [
+      "opengraph",
+      "22592",
+      "main",
+      "parse_opengraph",
+      null,
+      "scalar",
+      "Parse Open Graph, Twitter Card and basic HTML metadata from an HTML document into a `STRUCT`.",
+      null,
+      {
+        "vgi.category": "parse",
+        "vgi.doc_llm": "Same as parse_opengraph(html) but takes the page's own URL as a second argument and returns every URL-valued field (url, image, images, video, audio, canonical_url, favicon_url, oembed_url) as an absolute URL. Use it when you stored crawled HTML next to its URL: `parse_opengraph(body, page_url)`. A <base href> in the document overrides base_url. Fields: title, description, type, url, site_name, locale, image, image_alt, image_width, image_height, images (list), video, audio, twitter_card, twitter_site, twitter_creator, canonical_url, favicon_url, oembed_url. Fallbacks: title = og:title \u2192 twitter:title \u2192 <title>; description = og:description \u2192 twitter:description \u2192 <meta name=description>; url = og:url \u2192 <link rel=canonical>; image = first og:image \u2192 twitter:image; locale = og:locale \u2192 <html lang>. The first occurrence of a property wins. Values are entity-decoded and whitespace-trimmed; absent values are NULL (images is an empty list).",
+        "vgi.doc_md": "## parse_opengraph(html, base_url)\n\nLike `parse_opengraph(html)`, with relative URLs resolved against `base_url` (or the page's `<base href>`).",
+        "vgi.example_queries": "[{\"description\":\"Pull the title and preview image out of an HTML document\",\"sql\":\"SELECT og.title, og.image FROM (SELECT opengraph.main.parse_opengraph('<html lang=\\\"en\\\"><head><title>Fallback</title><meta property=\\\"og:title\\\" content=\\\"Rock &amp; Roll\\\"><meta property=\\\"og:image\\\" content=\\\"/cover.png\\\"></head></html>') AS og)\"},{\"description\":\"Resolve a relative og:image against the page URL\",\"sql\":\"SELECT opengraph.main.parse_opengraph('<html lang=\\\"en\\\"><head><title>Fallback</title><meta property=\\\"og:title\\\" content=\\\"Rock &amp; Roll\\\"><meta property=\\\"og:image\\\" content=\\\"/cover.png\\\"></head></html>', 'https://example.com/music/').image AS image\"},{\"description\":\"Build article preview cards from crawled HTML: title and absolute image from parse_opengraph(html, base_url), plus the article:tag keywords (not in the summary) collected from opengraph_tags\",\"sql\":\"WITH pages(page_url, html) AS (VALUES ('https://blog.example.com/posts/duckdb', '<title>Blog</title><meta property=\\\"og:title\\\" content=\\\"Why DuckDB\\\"><meta property=\\\"og:image\\\" content=\\\"/img/duck.png\\\"><meta property=\\\"article:tag\\\" content=\\\"duckdb\\\"><meta property=\\\"article:tag\\\" content=\\\"sql\\\">'), ('https://blog.example.com/posts/hello', '<title>Hello, world</title><meta property=\\\"article:tag\\\" content=\\\"intro\\\">')) SELECT page_url, og.title, og.image, article_tags FROM (SELECT page_url, opengraph.main.parse_opengraph(html, page_url) AS og, [t.content FOR t IN opengraph.main.opengraph_tags(html) IF t.property = 'article:tag'] AS article_tags FROM pages) ORDER BY page_url\"}]",
+        "vgi.executable_examples": "[{\"description\":\"A relative og:image becomes absolute\",\"sql\":\"SELECT opengraph.main.parse_opengraph('<html lang=\\\"en\\\"><head><title>Fallback</title><meta property=\\\"og:title\\\" content=\\\"Rock &amp; Roll\\\"><meta property=\\\"og:image\\\" content=\\\"/cover.png\\\"></head></html>', 'https://example.com/music/').image AS image ORDER BY ALL\",\"expected_result\":[[\"https://example.com/cover.png\"]]},{\"description\":\"Build article preview cards from crawled HTML: title and absolute image from parse_opengraph(html, base_url), plus the article:tag keywords (not in the summary) collected from opengraph_tags\",\"sql\":\"WITH pages(page_url, html) AS (VALUES ('https://blog.example.com/posts/duckdb', '<title>Blog</title><meta property=\\\"og:title\\\" content=\\\"Why DuckDB\\\"><meta property=\\\"og:image\\\" content=\\\"/img/duck.png\\\"><meta property=\\\"article:tag\\\" content=\\\"duckdb\\\"><meta property=\\\"article:tag\\\" content=\\\"sql\\\">'), ('https://blog.example.com/posts/hello', '<title>Hello, world</title><meta property=\\\"article:tag\\\" content=\\\"intro\\\">')) SELECT page_url, og.title, og.image, article_tags FROM (SELECT page_url, opengraph.main.parse_opengraph(html, page_url) AS og, [t.content FOR t IN opengraph.main.opengraph_tags(html) IF t.property = 'article:tag'] AS article_tags FROM pages) ORDER BY page_url\",\"expected_result\":[[\"https://blog.example.com/posts/duckdb\",\"Why DuckDB\",\"https://blog.example.com/img/duck.png\",[\"duckdb\",\"sql\"]],[\"https://blog.example.com/posts/hello\",\"Hello, world\",null,[\"intro\"]]]}]",
+        "vgi.keywords": "[\"open graph\",\"opengraph\",\"base url\",\"absolute url\",\"relative url\",\"og:image\",\"link preview\",\"crawl\",\"html metadata\"]",
+        "vgi.title": "Parse Open Graph metadata (absolute URLs)"
+      },
+      "STRUCT(title VARCHAR, description VARCHAR, \"type\" VARCHAR, url VARCHAR, site_name VARCHAR, locale VARCHAR, image VARCHAR, image_alt VARCHAR, image_width INTEGER, image_height INTEGER, images VARCHAR[], video VARCHAR, audio VARCHAR, twitter_card VARCHAR, twitter_site VARCHAR, twitter_creator VARCHAR, canonical_url VARCHAR, favicon_url VARCHAR, oembed_url VARCHAR)",
+      [
+        "html"
+      ],
+      [
+        "VARCHAR"
+      ],
+      null,
+      null,
+      false,
+      true,
+      null,
+      22598,
+      [
+        "SELECT og.title, og.image FROM (SELECT opengraph.main.parse_opengraph('<html lang=\"en\"><head><title>Fallback</title><meta property=\"og:title\" content=\"Rock &amp; Roll\"><meta property=\"og:image\" content=\"/cover.png\"></head></html>') AS og)"
+      ],
+      "CONSISTENT",
+      []
+    ],
+    [
+      "opengraph",
+      "22592",
+      "main",
+      "parse_opengraph",
+      null,
+      "scalar",
+      "Parse Open Graph metadata from HTML, resolving relative URLs against the page's URL.",
+      null,
+      {
+        "vgi.category": "parse",
+        "vgi.doc_llm": "Same as parse_opengraph(html) but takes the page's own URL as a second argument and returns every URL-valued field (url, image, images, video, audio, canonical_url, favicon_url, oembed_url) as an absolute URL. Use it when you stored crawled HTML next to its URL: `parse_opengraph(body, page_url)`. A <base href> in the document overrides base_url. Fields: title, description, type, url, site_name, locale, image, image_alt, image_width, image_height, images (list), video, audio, twitter_card, twitter_site, twitter_creator, canonical_url, favicon_url, oembed_url. Fallbacks: title = og:title \u2192 twitter:title \u2192 <title>; description = og:description \u2192 twitter:description \u2192 <meta name=description>; url = og:url \u2192 <link rel=canonical>; image = first og:image \u2192 twitter:image; locale = og:locale \u2192 <html lang>. The first occurrence of a property wins. Values are entity-decoded and whitespace-trimmed; absent values are NULL (images is an empty list).",
+        "vgi.doc_md": "## parse_opengraph(html, base_url)\n\nLike `parse_opengraph(html)`, with relative URLs resolved against `base_url` (or the page's `<base href>`).",
+        "vgi.example_queries": "[{\"description\":\"Pull the title and preview image out of an HTML document\",\"sql\":\"SELECT og.title, og.image FROM (SELECT opengraph.main.parse_opengraph('<html lang=\\\"en\\\"><head><title>Fallback</title><meta property=\\\"og:title\\\" content=\\\"Rock &amp; Roll\\\"><meta property=\\\"og:image\\\" content=\\\"/cover.png\\\"></head></html>') AS og)\"},{\"description\":\"Resolve a relative og:image against the page URL\",\"sql\":\"SELECT opengraph.main.parse_opengraph('<html lang=\\\"en\\\"><head><title>Fallback</title><meta property=\\\"og:title\\\" content=\\\"Rock &amp; Roll\\\"><meta property=\\\"og:image\\\" content=\\\"/cover.png\\\"></head></html>', 'https://example.com/music/').image AS image\"},{\"description\":\"Build article preview cards from crawled HTML: title and absolute image from parse_opengraph(html, base_url), plus the article:tag keywords (not in the summary) collected from opengraph_tags\",\"sql\":\"WITH pages(page_url, html) AS (VALUES ('https://blog.example.com/posts/duckdb', '<title>Blog</title><meta property=\\\"og:title\\\" content=\\\"Why DuckDB\\\"><meta property=\\\"og:image\\\" content=\\\"/img/duck.png\\\"><meta property=\\\"article:tag\\\" content=\\\"duckdb\\\"><meta property=\\\"article:tag\\\" content=\\\"sql\\\">'), ('https://blog.example.com/posts/hello', '<title>Hello, world</title><meta property=\\\"article:tag\\\" content=\\\"intro\\\">')) SELECT page_url, og.title, og.image, article_tags FROM (SELECT page_url, opengraph.main.parse_opengraph(html, page_url) AS og, [t.content FOR t IN opengraph.main.opengraph_tags(html) IF t.property = 'article:tag'] AS article_tags FROM pages) ORDER BY page_url\"}]",
+        "vgi.executable_examples": "[{\"description\":\"A relative og:image becomes absolute\",\"sql\":\"SELECT opengraph.main.parse_opengraph('<html lang=\\\"en\\\"><head><title>Fallback</title><meta property=\\\"og:title\\\" content=\\\"Rock &amp; Roll\\\"><meta property=\\\"og:image\\\" content=\\\"/cover.png\\\"></head></html>', 'https://example.com/music/').image AS image ORDER BY ALL\",\"expected_result\":[[\"https://example.com/cover.png\"]]},{\"description\":\"Build article preview cards from crawled HTML: title and absolute image from parse_opengraph(html, base_url), plus the article:tag keywords (not in the summary) collected from opengraph_tags\",\"sql\":\"WITH pages(page_url, html) AS (VALUES ('https://blog.example.com/posts/duckdb', '<title>Blog</title><meta property=\\\"og:title\\\" content=\\\"Why DuckDB\\\"><meta property=\\\"og:image\\\" content=\\\"/img/duck.png\\\"><meta property=\\\"article:tag\\\" content=\\\"duckdb\\\"><meta property=\\\"article:tag\\\" content=\\\"sql\\\">'), ('https://blog.example.com/posts/hello', '<title>Hello, world</title><meta property=\\\"article:tag\\\" content=\\\"intro\\\">')) SELECT page_url, og.title, og.image, article_tags FROM (SELECT page_url, opengraph.main.parse_opengraph(html, page_url) AS og, [t.content FOR t IN opengraph.main.opengraph_tags(html) IF t.property = 'article:tag'] AS article_tags FROM pages) ORDER BY page_url\",\"expected_result\":[[\"https://blog.example.com/posts/duckdb\",\"Why DuckDB\",\"https://blog.example.com/img/duck.png\",[\"duckdb\",\"sql\"]],[\"https://blog.example.com/posts/hello\",\"Hello, world\",null,[\"intro\"]]]}]",
+        "vgi.keywords": "[\"open graph\",\"opengraph\",\"base url\",\"absolute url\",\"relative url\",\"og:image\",\"link preview\",\"crawl\",\"html metadata\"]",
+        "vgi.title": "Parse Open Graph metadata (absolute URLs)"
+      },
+      "STRUCT(title VARCHAR, description VARCHAR, \"type\" VARCHAR, url VARCHAR, site_name VARCHAR, locale VARCHAR, image VARCHAR, image_alt VARCHAR, image_width INTEGER, image_height INTEGER, images VARCHAR[], video VARCHAR, audio VARCHAR, twitter_card VARCHAR, twitter_site VARCHAR, twitter_creator VARCHAR, canonical_url VARCHAR, favicon_url VARCHAR, oembed_url VARCHAR)",
+      [
+        "html",
+        "base_url"
+      ],
+      [
+        "VARCHAR",
+        "VARCHAR"
+      ],
+      null,
+      null,
+      false,
+      true,
+      null,
+      22598,
+      [
+        "SELECT opengraph.main.parse_opengraph('<html lang=\"en\"><head><title>Fallback</title><meta property=\"og:title\" content=\"Rock &amp; Roll\"><meta property=\"og:image\" content=\"/cover.png\"></head></html>', 'https://example.com/music/').image AS image",
+        "WITH pages(page_url, html) AS (VALUES ('https://blog.example.com/posts/duckdb', '<title>Blog</title><meta property=\"og:title\" content=\"Why DuckDB\"><meta property=\"og:image\" content=\"/img/duck.png\"><meta property=\"article:tag\" content=\"duckdb\"><meta property=\"article:tag\" content=\"sql\">'), ('https://blog.example.com/posts/hello', '<title>Hello, world</title><meta property=\"article:tag\" content=\"intro\">')) SELECT page_url, og.title, og.image, article_tags FROM (SELECT page_url, opengraph.main.parse_opengraph(html, page_url) AS og, [t.content FOR t IN opengraph.main.opengraph_tags(html) IF t.property = 'article:tag'] AS article_tags FROM pages) ORDER BY page_url"
+      ],
+      "CONSISTENT",
+      []
+    ]
+  ]
+}

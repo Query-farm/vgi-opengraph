@@ -1,0 +1,269 @@
+{
+  "schema_version": 1,
+  "status": "met",
+  "meets_target": true,
+  "catalogs": {
+    "released": {
+      "catalog_status": "verified",
+      "revision": "v0.1.0",
+      "catalog_sha256": "0fa5ca6acf0fac9db795d37e6fd277dba220eef0e0cb0e31ddc3f2b4b1ae8e7e",
+      "collection_reconciled": true,
+      "denominator": 3,
+      "observed_objects": 3,
+      "required": 3,
+      "verified_count": 3,
+      "candidate_count": 0,
+      "fraction": 1.0,
+      "meets_target": true,
+      "exact_runtime_count": 3,
+      "runtime_revisions": [
+        "v0.1.0"
+      ],
+      "covered": [
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "fetch_opengraph"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "opengraph_tags"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "parse_opengraph"
+        }
+      ],
+      "uncovered": [],
+      "objects": [
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "fetch_opengraph",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "fetch_opengraph(url VARCHAR) -> STRUCT(title VARCHAR, description VARCHAR, \"type\" VARCHAR, url VARCHAR, site_name VARCHAR, locale VARCHAR, image VARCHAR, image_alt VARCHAR, image_width INTEGER, image_height INTEGER, images VARCHAR[], video VARCHAR, audio VARCHAR, twitter_card VARCHAR, twitter_site VARCHAR, twitter_creator VARCHAR, canonical_url VARCHAR, favicon_url VARCHAR, oembed_url VARCHAR, final_url VARCHAR, http_status INTEGER, content_type VARCHAR, \"error\" VARCHAR)"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "opengraph_tags",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "opengraph_tags(html VARCHAR) -> STRUCT(property VARCHAR, \"content\" VARCHAR)[]"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "parse_opengraph",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "parse_opengraph(html VARCHAR) -> STRUCT(title VARCHAR, description VARCHAR, \"type\" VARCHAR, url VARCHAR, site_name VARCHAR, locale VARCHAR, image VARCHAR, image_alt VARCHAR, image_width INTEGER, image_height INTEGER, images VARCHAR[], video VARCHAR, audio VARCHAR, twitter_card VARCHAR, twitter_site VARCHAR, twitter_creator VARCHAR, canonical_url VARCHAR, favicon_url VARCHAR, oembed_url VARCHAR)",
+            "parse_opengraph(html VARCHAR, base_url VARCHAR) -> STRUCT(title VARCHAR, description VARCHAR, \"type\" VARCHAR, url VARCHAR, site_name VARCHAR, locale VARCHAR, image VARCHAR, image_alt VARCHAR, image_width INTEGER, image_height INTEGER, images VARCHAR[], video VARCHAR, audio VARCHAR, twitter_card VARCHAR, twitter_site VARCHAR, twitter_creator VARCHAR, canonical_url VARCHAR, favicon_url VARCHAR, oembed_url VARCHAR)"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        }
+      ],
+      "issues": []
+    },
+    "current": {
+      "catalog_status": "verified",
+      "revision": "cb0d5e1f4c0e85e4c63992120ee5a63324671c2f",
+      "catalog_sha256": "8ae4b75af2dd7d7709038ae3311a1ad03028eafb36746176d764875da666ef45",
+      "collection_reconciled": true,
+      "denominator": 3,
+      "observed_objects": 3,
+      "required": 3,
+      "verified_count": 3,
+      "candidate_count": 0,
+      "fraction": 1.0,
+      "meets_target": true,
+      "exact_runtime_count": 0,
+      "runtime_revisions": [
+        "v0.1.0"
+      ],
+      "covered": [
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "fetch_opengraph"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "opengraph_tags"
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "parse_opengraph"
+        }
+      ],
+      "uncovered": [],
+      "objects": [
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "fetch_opengraph",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "fetch_opengraph(url VARCHAR) -> STRUCT(title VARCHAR, description VARCHAR, \"type\" VARCHAR, url VARCHAR, site_name VARCHAR, locale VARCHAR, image VARCHAR, image_alt VARCHAR, image_width INTEGER, image_height INTEGER, images VARCHAR[], video VARCHAR, audio VARCHAR, twitter_card VARCHAR, twitter_site VARCHAR, twitter_creator VARCHAR, canonical_url VARCHAR, favicon_url VARCHAR, oembed_url VARCHAR, final_url VARCHAR, http_status INTEGER, content_type VARCHAR, \"error\" VARCHAR)"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "opengraph_tags",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "opengraph_tags(html VARCHAR) -> STRUCT(property VARCHAR, \"content\" VARCHAR)[]"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        },
+        {
+          "schema": [
+            "main"
+          ],
+          "name": "parse_opengraph",
+          "kinds": [
+            "function"
+          ],
+          "signatures": [
+            "parse_opengraph(html VARCHAR) -> STRUCT(title VARCHAR, description VARCHAR, \"type\" VARCHAR, url VARCHAR, site_name VARCHAR, locale VARCHAR, image VARCHAR, image_alt VARCHAR, image_width INTEGER, image_height INTEGER, images VARCHAR[], video VARCHAR, audio VARCHAR, twitter_card VARCHAR, twitter_site VARCHAR, twitter_creator VARCHAR, canonical_url VARCHAR, favicon_url VARCHAR, oembed_url VARCHAR)",
+            "parse_opengraph(html VARCHAR, base_url VARCHAR) -> STRUCT(title VARCHAR, description VARCHAR, \"type\" VARCHAR, url VARCHAR, site_name VARCHAR, locale VARCHAR, image VARCHAR, image_alt VARCHAR, image_width INTEGER, image_height INTEGER, images VARCHAR[], video VARCHAR, audio VARCHAR, twitter_card VARCHAR, twitter_site VARCHAR, twitter_creator VARCHAR, canonical_url VARCHAR, favicon_url VARCHAR, oembed_url VARCHAR)"
+          ],
+          "access": [
+            "read"
+          ],
+          "authentication": [
+            "none"
+          ]
+        }
+      ],
+      "issues": []
+    }
+  },
+  "interface_drift": {
+    "known": true,
+    "current_only": [],
+    "released_only": [],
+    "changed": []
+  },
+  "notebooks": {
+    "01_audit_fallbacks_before_publishing_previews.ipynb": {
+      "verified": true,
+      "issues": []
+    },
+    "02_keep_fetch_outcomes_before_selecting_previews.ipynb": {
+      "verified": true,
+      "issues": []
+    }
+  },
+  "examples": [
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "parse_opengraph"
+      },
+      "notebook": "01_audit_fallbacks_before_publishing_previews.ipynb",
+      "runtime_revision": "v0.1.0",
+      "runtime_catalog_sha256": "0fa5ca6acf0fac9db795d37e6fd277dba220eef0e0cb0e31ddc3f2b4b1ae8e7e"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "opengraph_tags"
+      },
+      "notebook": "01_audit_fallbacks_before_publishing_previews.ipynb",
+      "runtime_revision": "v0.1.0",
+      "runtime_catalog_sha256": "0fa5ca6acf0fac9db795d37e6fd277dba220eef0e0cb0e31ddc3f2b4b1ae8e7e"
+    },
+    {
+      "status": "verified",
+      "issues": [],
+      "verified_catalogs": [
+        "released",
+        "current"
+      ],
+      "object": {
+        "schema": [
+          "main"
+        ],
+        "name": "fetch_opengraph"
+      },
+      "notebook": "02_keep_fetch_outcomes_before_selecting_previews.ipynb",
+      "runtime_revision": "v0.1.0",
+      "runtime_catalog_sha256": "0fa5ca6acf0fac9db795d37e6fd277dba220eef0e0cb0e31ddc3f2b4b1ae8e7e"
+    }
+  ],
+  "issues": []
+}

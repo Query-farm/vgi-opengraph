@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "repository": "Query-farm/vgi-opengraph",
+  "revision": "cb0d5e1f4c0e85e4c63992120ee5a63324671c2f",
+  "captured_at": "2026-11-14T21:22:24.985653+00:00",
+  "default_schema": "main",
+  "scope": "all_public_functions_and_tables",
+  "complete": true,
+  "evidence": [
+    {
+      "path": "coverage/functions.json",
+      "sha256": "d8011d1642adff919fefad649e3180056d0a8a2b8768ff56149296ab3be4ac4f",
+      "description": "Actual complete worker-filtered runtime export; release/current identical commit verified"
+    },
+    {
+      "path": "coverage/tables.json",
+      "sha256": "1c0d13565c53f136802ef579e000dcafe5412ea3be36c25b4e90eb85f75898f8",
+      "description": "Actual complete worker-filtered runtime export; release/current identical commit verified"
+    },
+    {
+      "path": "coverage/views.json",
+      "sha256": "88f3c16633011adc133d7f5acb8244490b49a8b2b86e639aaaac9fd68f8a4ed4",
+      "description": "Actual complete worker-filtered runtime export; release/current identical commit verified"
+    },
+    {
+      "path": "coverage/arguments.json",
+      "sha256": "31a0abfa3c461aac9cb43d0e5b213cb324f9980d46bf04ccbaa977e9cf853fc6",
+      "description": "Actual complete worker-filtered runtime export; release/current identical commit verified"
+    },
+    {
+      "path": "coverage/catalog-metadata.json",
+      "sha256": "cbc7d678254e1584ec40c31a1050ac038f4399a2d1fbe878ae082821e65ff181",
+      "description": "Actual complete worker-filtered runtime export; release/current identical commit verified"
+    },
+    {
+      "path": "coverage/source-compatibility.json",
+      "sha256": "d108d0c4f088a9eca8427c093f33c72b8229a960d181c4f3746a3502a7f36571",
+      "description": "Actual complete worker-filtered runtime export; release/current identical commit verified"
+    }
+  ],
+  "objects": [
+    {
+      "schema": "main",
+      "name": "fetch_opengraph",
+      "kind": "function",
+      "authentication": "none",
+      "access": "read",
+      "signatures": [
+        "fetch_opengraph(url VARCHAR) -> STRUCT(title VARCHAR, description VARCHAR, \"type\" VARCHAR, url VARCHAR, site_name VARCHAR, locale VARCHAR, image VARCHAR, image_alt VARCHAR, image_width INTEGER, image_height INTEGER, images VARCHAR[], video VARCHAR, audio VARCHAR, twitter_card VARCHAR, twitter_site VARCHAR, twitter_creator VARCHAR, canonical_url VARCHAR, favicon_url VARCHAR, oembed_url VARCHAR, final_url VARCHAR, http_status INTEGER, content_type VARCHAR, \"error\" VARCHAR)"
+      ]
+    },
+    {
+      "schema": "main",
+      "name": "opengraph_tags",
+      "kind": "function",
+      "authentication": "none",
+      "access": "read",
+      "signatures": [
+        "opengraph_tags(html VARCHAR) -> STRUCT(property VARCHAR, \"content\" VARCHAR)[]"
+      ]
+    },
+    {
+      "schema": "main",
+      "name": "parse_opengraph",
+      "kind": "function",
+      "authentication": "none",
+      "access": "read",
+      "signatures": [
+        "parse_opengraph(html VARCHAR) -> STRUCT(title VARCHAR, description VARCHAR, \"type\" VARCHAR, url VARCHAR, site_name VARCHAR, locale VARCHAR, image VARCHAR, image_alt VARCHAR, image_width INTEGER, image_height INTEGER, images VARCHAR[], video VARCHAR, audio VARCHAR, twitter_card VARCHAR, twitter_site VARCHAR, twitter_creator VARCHAR, canonical_url VARCHAR, favicon_url VARCHAR, oembed_url VARCHAR)",
+        "parse_opengraph(html VARCHAR, base_url VARCHAR) -> STRUCT(title VARCHAR, description VARCHAR, \"type\" VARCHAR, url VARCHAR, site_name VARCHAR, locale VARCHAR, image VARCHAR, image_alt VARCHAR, image_width INTEGER, image_height INTEGER, images VARCHAR[], video VARCHAR, audio VARCHAR, twitter_card VARCHAR, twitter_site VARCHAR, twitter_creator VARCHAR, canonical_url VARCHAR, favicon_url VARCHAR, oembed_url VARCHAR)"
+      ]
+    }
+  ],
+  "launch": "github-auto://Query-farm/vgi-opengraph@v0.1.0",
+  "runtime": "Haybarn2.0.0rc11",
+  "review_notes": "Four scalar rows group into three logical names; both parse_opengraph overload signatures retained. HTTP fetch read is included. Empty tables/views confirm no omitted catalog relation."
+}

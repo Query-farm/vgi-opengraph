@@ -1,0 +1,14 @@
+{
+  "release": "v0.1.0",
+  "release_commit": "cb0d5e1f4c0e85e4c63992120ee5a63324671c2f",
+  "current_revision": "cb0d5e1f4c0e85e4c63992120ee5a63324671c2f",
+  "source_and_dependency_trees_identical": true,
+  "review": "Release tag and current public main point to the same commit. Runtime exports contain four scalar rows grouped into three named public surfaces, with full STRUCT/LIST return types. No tables or views. No exclusions.",
+  "source_ci": {
+    "url": "https://github.com/Query-farm/vgi-opengraph/actions/runs/43614749896",
+    "revision": "cb0d5e1f4c0e85e4c63992120ee5a63324671c2f",
+    "conclusion": "success"
+  },
+  "notebook_validation": "Actual published native release via github-auto and Haybarn2.0.0rc11; no source build or source-suite repetition.",
+  "current_runtime_note": "Same release/current source commit; coverage receipts identify the release tag, so current-compatible mappings do not claim a separately executed current-main launch."
+}
