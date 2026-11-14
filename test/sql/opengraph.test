@@ -116,3 +116,26 @@ query T
 SELECT opengraph.main.fetch_opengraph(NULL) IS NULL;
 ----
 true
+
+# ------------------------------------------------------------ composed (src/opengraph.ts examples)
+
+# PREVIEW_WITH_ARTICLE_TAGS: summary struct + article:tag values from the raw tag list.
+query TTTT
+WITH pages(page_url, html) AS (VALUES ('https://blog.example.com/posts/duckdb', '<title>Blog</title><meta property="og:title" content="Why DuckDB"><meta property="og:image" content="/img/duck.png"><meta property="article:tag" content="duckdb"><meta property="article:tag" content="sql">'), ('https://blog.example.com/posts/hello', '<title>Hello, world</title><meta property="article:tag" content="intro">')) SELECT page_url, og.title, og.image, article_tags FROM (SELECT page_url, opengraph.main.parse_opengraph(html, page_url) AS og, [t.content FOR t IN opengraph.main.opengraph_tags(html) IF t.property = 'article:tag'] AS article_tags FROM pages) ORDER BY page_url;
+----
+https://blog.example.com/posts/duckdb	Why DuckDB	https://blog.example.com/img/duck.png	[duckdb, sql]
+https://blog.example.com/posts/hello	Hello, world	NULL	[intro]
+
+# TITLE_SOURCE_AUDIT: where each preview title came from.
+query TTT
+WITH pages(page_url, html) AS (VALUES ('https://shop.example.com/a', '<title>Shop A</title><meta property="og:title" content="Spring Sale">'), ('https://shop.example.com/b', '<title>Shop B</title><meta name="twitter:title" content="B on Twitter">'), ('https://shop.example.com/c', '<title>Shop C</title>')) SELECT page_url, preview_title, CASE WHEN list_contains(props, 'og:title') THEN 'og:title' WHEN list_contains(props, 'twitter:title') THEN 'twitter:title' ELSE '<title> fallback' END AS title_source FROM (SELECT page_url, opengraph.main.parse_opengraph(html).title AS preview_title, [t.property FOR t IN opengraph.main.opengraph_tags(html)] AS props FROM pages) ORDER BY page_url;
+----
+https://shop.example.com/a	Spring Sale	og:title
+https://shop.example.com/b	B on Twitter	twitter:title
+https://shop.example.com/c	Shop C	<title> fallback
+
+# Grader for the latest_article_title agent task (vgi-agent-tests.yaml).
+query T
+SELECT opengraph.main.parse_opengraph(html).title AS title FROM (VALUES ('<meta property="og:title" content="Duck Season"><meta property="article:published_time" content="2026-03-01T09:00:00Z">'), ('<title>Pond Notes</title><meta property="article:published_time" content="2026-05-20T12:30:00Z">')) AS p(html) ORDER BY [t.content FOR t IN opengraph.main.opengraph_tags(html) IF t.property = 'article:published_time'][1]::TIMESTAMPTZ DESC LIMIT 1;
+----
+Pond Notes

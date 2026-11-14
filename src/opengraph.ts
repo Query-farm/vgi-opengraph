@@ -84,6 +84,46 @@ const SAMPLE_HTML =
 
 const toRow = (og: OpenGraph) => og;
 
+/**
+ * Composed examples: the summary STRUCT and the raw tag list over the same HTML.
+ * Each is defined once and attached to the function that drives it; the catalog
+ * gathers them into the schema-level list.
+ */
+const CRAWLED_PAGES =
+  "WITH pages(page_url, html) AS (VALUES " +
+  "('https://blog.example.com/posts/duckdb', '<title>Blog</title>" +
+  '<meta property="og:title" content="Why DuckDB"><meta property="og:image" content="/img/duck.png">' +
+  '<meta property="article:tag" content="duckdb"><meta property="article:tag" content="sql">\'), ' +
+  "('https://blog.example.com/posts/hello', '<title>Hello, world</title>" +
+  '<meta property="article:tag" content="intro">\')) ';
+
+export const PREVIEW_WITH_ARTICLE_TAGS = {
+  description:
+    "Build article preview cards from crawled HTML: title and absolute image from parse_opengraph(html, base_url), " +
+    "plus the article:tag keywords (not in the summary) collected from opengraph_tags",
+  sql:
+    CRAWLED_PAGES +
+    "SELECT page_url, og.title, og.image, article_tags FROM (SELECT page_url, " +
+    "opengraph.main.parse_opengraph(html, page_url) AS og, " +
+    "[t.content FOR t IN opengraph.main.opengraph_tags(html) IF t.property = 'article:tag'] AS article_tags " +
+    "FROM pages) ORDER BY page_url",
+};
+
+export const TITLE_SOURCE_AUDIT = {
+  description:
+    "Audit where each page's preview title comes from: check the raw tags from opengraph_tags for og:title or " +
+    "twitter:title, else parse_opengraph fell back to the <title> element",
+  sql:
+    "WITH pages(page_url, html) AS (VALUES " +
+    "('https://shop.example.com/a', '<title>Shop A</title><meta property=\"og:title\" content=\"Spring Sale\">'), " +
+    "('https://shop.example.com/b', '<title>Shop B</title><meta name=\"twitter:title\" content=\"B on Twitter\">'), " +
+    "('https://shop.example.com/c', '<title>Shop C</title>')) " +
+    "SELECT page_url, preview_title, CASE WHEN list_contains(props, 'og:title') THEN 'og:title' " +
+    "WHEN list_contains(props, 'twitter:title') THEN 'twitter:title' ELSE '<title> fallback' END AS title_source " +
+    "FROM (SELECT page_url, opengraph.main.parse_opengraph(html).title AS preview_title, " +
+    "[t.property FOR t IN opengraph.main.opengraph_tags(html)] AS props FROM pages) ORDER BY page_url",
+};
+
 /** Deterministic, network-free examples that vgi-lint executes and compares. */
 const executable = (examples: { description: string; sql: string; expected_result: unknown[][] }[]) => ({
   "vgi.executable_examples": JSON.stringify(examples),
@@ -174,6 +214,18 @@ export const parseOpengraphWithBase = defineScalarFunction({
         sql: `SELECT opengraph.main.parse_opengraph(${SAMPLE_HTML}, 'https://example.com/music/').image AS image ORDER BY ALL`,
         expected_result: [["https://example.com/cover.png"]],
       },
+      {
+        ...PREVIEW_WITH_ARTICLE_TAGS,
+        expected_result: [
+          [
+            "https://blog.example.com/posts/duckdb",
+            "Why DuckDB",
+            "https://blog.example.com/img/duck.png",
+            ["duckdb", "sql"],
+          ],
+          ["https://blog.example.com/posts/hello", "Hello, world", null, ["intro"]],
+        ],
+      },
     ]),
   },
   examples: [
@@ -181,6 +233,7 @@ export const parseOpengraphWithBase = defineScalarFunction({
       sql: `SELECT opengraph.main.parse_opengraph(${SAMPLE_HTML}, 'https://example.com/music/').image AS image`,
       description: "Resolve a relative og:image against the page URL",
     },
+    PREVIEW_WITH_ARTICLE_TAGS,
   ],
 });
 
@@ -230,6 +283,7 @@ export const opengraphTags = defineScalarFunction({
         ")) AS t) ORDER BY t.property",
       description: "Unnest the raw meta tags of a document",
     },
+    TITLE_SOURCE_AUDIT,
   ],
 });
 

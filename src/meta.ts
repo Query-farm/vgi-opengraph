@@ -121,6 +121,15 @@ export const AGENT_TEST_TASKS = [
       '<meta property="og:type" content="article">',
   },
   {
+    name: "latest_article_title",
+    prompt:
+      "Using the opengraph worker, which of these two article pages was published most recently " +
+      "(by article:published_time)? Return its link-preview title as a single column named title. " +
+      'Page 1: <meta property="og:title" content="Duck Season"><meta property="article:published_time" ' +
+      'content="2026-03-01T09:00:00Z">  Page 2: <title>Pond Notes</title><meta property="article:published_time" ' +
+      'content="2026-05-20T12:30:00Z">',
+  },
+  {
     name: "fetch_page_title",
     prompt: "Using the opengraph worker, fetch https://example.com and report the page's title.",
   },

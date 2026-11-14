@@ -11,6 +11,10 @@ tasks:
   - name: count_meta_properties
     reference_sql: >-
       SELECT count(*) AS tags FROM (SELECT unnest(opengraph.main.opengraph_tags('<meta property="article:tag" content="duckdb"><meta property="article:tag" content="sql"><meta property="og:type" content="article">')) AS t) WHERE t.property = 'article:tag'
+  # Combines parse_opengraph (title with <title> fallback) and opengraph_tags (article:published_time).
+  - name: latest_article_title
+    reference_sql: >-
+      SELECT opengraph.main.parse_opengraph(html).title AS title FROM (VALUES ('<meta property="og:title" content="Duck Season"><meta property="article:published_time" content="2026-03-01T09:00:00Z">'), ('<title>Pond Notes</title><meta property="article:published_time" content="2026-05-20T12:30:00Z">')) AS p(html) ORDER BY [t.content FOR t IN opengraph.main.opengraph_tags(html) IF t.property = 'article:published_time'][1]::TIMESTAMPTZ DESC LIMIT 1
   # Live network: https://example.com serves <title>Example Domain</title>.
   - name: fetch_page_title
     reference_sql: SELECT opengraph.main.fetch_opengraph('https://example.com').title AS title

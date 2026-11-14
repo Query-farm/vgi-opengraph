@@ -117,6 +117,18 @@ FROM (SELECT unnest(opengraph.main.opengraph_tags(body)) AS t FROM crawl)
 WHERE t.property LIKE 'article:%';
 ```
 
+**Combine the summary with raw tags**: preview cards for crawled articles, with the
+`article:tag` keywords the summary doesn't carry:
+
+```sql
+SELECT page_url, og.title, og.image, article_tags
+FROM (SELECT page_url,
+             opengraph.main.parse_opengraph(body, page_url) AS og,
+             [t.content FOR t IN opengraph.main.opengraph_tags(body) IF t.property = 'article:tag'] AS article_tags
+      FROM crawl)
+ORDER BY page_url;
+```
+
 **Audit social-sharing tags across a site:**
 
 ```sql
