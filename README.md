@@ -193,3 +193,7 @@ Written by [Query.Farm](https://query.farm). Released under the
 [BSD Zero Clause License](LICENSE) (0BSD).
 
 Copyright 2026 Query Farm LLC - https://query.farm
+
+## Executed notebook
+
+[Audit metadata fallbacks before publishing previews](notebooks/README.md) uses synthetic HTML through the real parser, a portable pinned worker launch, and a separate policy experiment.

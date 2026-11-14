@@ -1,0 +1,56 @@
+[
+  {
+    "page_id": "A",
+    "label": "Complete OG",
+    "page_url": "https://example.test/articles/a",
+    "html": "<!doctype html><html lang=\"en\"><head><title>Browser A</title><meta property=\"og:title\" content=\"Gardens &amp; Rain\"><meta property=\"og:type\" content=\"article\"><meta property=\"og:description\" content=\"A complete example\"><meta property=\"og:url\" content=\"https://example.test/articles/a\"><meta property=\"og:image\" content=\"/cards/a.png\"></head><body>Explicit synthetic notebook fixture.</body></html>"
+  },
+  {
+    "page_id": "B",
+    "label": "Twitter fallback",
+    "page_url": "https://example.test/articles/b",
+    "html": "<!doctype html><html lang=\"en\"><head><title>Browser B</title><meta name=\"twitter:title\" content=\"Twitter B\"><meta name=\"twitter:description\" content=\"Twitter description\"><meta name=\"twitter:image\" content=\"/cards/b.png\"><link rel=\"canonical\" href=\"/articles/b\"></head><body>Explicit synthetic notebook fixture.</body></html>"
+  },
+  {
+    "page_id": "C",
+    "label": "HTML title fallback",
+    "page_url": "https://example.test/articles/c",
+    "html": "<!doctype html><html lang=\"en\"><head><title>HTML C</title><meta name=\"description\" content=\"HTML description\"><meta property=\"og:image\" content=\"/cards/c.png\"><link rel=\"canonical\" href=\"/articles/c\"></head><body>Explicit synthetic notebook fixture.</body></html>"
+  },
+  {
+    "page_id": "D",
+    "label": "Conflicting OG titles",
+    "page_url": "https://example.test/articles/d",
+    "html": "<!doctype html><html lang=\"en\"><head><meta property=\"og:title\" content=\"First D\"><meta property=\"og:title\" content=\"Replacement D\"><meta property=\"og:description\" content=\"Both titles survive in raw tags\"><meta property=\"og:image\" content=\"/cards/d.png\"><meta property=\"og:url\" content=\"/articles/d\"></head><body>Explicit synthetic notebook fixture.</body></html>"
+  },
+  {
+    "page_id": "E",
+    "label": "Ordered images",
+    "page_url": "https://example.test/articles/e",
+    "html": "<!doctype html><html lang=\"en\"><head><meta property=\"og:title\" content=\"Two images E\"><meta property=\"og:description\" content=\"First image is intentionally smaller\"><meta property=\"og:url\" content=\"/articles/e\"><meta property=\"og:image\" content=\"/cards/small.png\"><meta property=\"og:image:width\" content=\"320\"><meta property=\"og:image:height\" content=\"180\"><meta property=\"og:image:alt\" content=\"Small first image\"><meta property=\"og:image\" content=\"/cards/large.png\"><meta property=\"og:image:width\" content=\"1200\"><meta property=\"og:image:height\" content=\"630\"></head><body>Explicit synthetic notebook fixture.</body></html>"
+  },
+  {
+    "page_id": "F",
+    "label": "HTML base URL",
+    "page_url": "https://example.test/articles/f",
+    "html": "<!doctype html><html lang=\"en\"><head><base href=\"https://cdn.example.test/assets/\"><meta property=\"og:title\" content=\"Base F\"><meta property=\"og:description\" content=\"Base controls relative URLs\"><meta property=\"og:image\" content=\"hero.png\"><link rel=\"canonical\" href=\"https://example.test/articles/f\"></head><body>Explicit synthetic notebook fixture.</body></html>"
+  },
+  {
+    "page_id": "G",
+    "label": "Missing image",
+    "page_url": "https://example.test/articles/g",
+    "html": "<!doctype html><html lang=\"en\"><head><meta property=\"og:title\" content=\"No image G\"><meta property=\"og:description\" content=\"A title does not imply an image\"><meta property=\"og:url\" content=\"/articles/g\"></head><body>Explicit synthetic notebook fixture.</body></html>"
+  },
+  {
+    "page_id": "H",
+    "label": "Missing HTML",
+    "page_url": "https://example.test/articles/h",
+    "html": null
+  },
+  {
+    "page_id": "I",
+    "label": "Empty metadata",
+    "page_url": "https://example.test/articles/i",
+    "html": "<!doctype html><html lang=\"en\"><head></head><body>Explicit synthetic notebook fixture.</body></html>"
+  }
+]
