@@ -1,0 +1,33 @@
+{
+  "/article": {
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "body": "<!doctype html><html><head><meta property=\"og:title\" content=\"Local article\"><meta property=\"og:description\" content=\"Authored local response\"><meta property=\"og:url\" content=\"/article\"><meta property=\"og:image\" content=\"/cards/article.png\"></head><body>Synthetic example.</body></html>"
+  },
+  "/go": {
+    "status": 302,
+    "content_type": "text/html; charset=utf-8",
+    "location": "/final/story",
+    "body": "<html><head><title>Redirect response body</title></head></html>"
+  },
+  "/final/story": {
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "body": "<!doctype html><html><head><meta property=\"og:title\" content=\"Redirect destination\"><meta property=\"og:description\" content=\"Relative URLs use final response URL\"><meta property=\"og:url\" content=\"./story\"><meta property=\"og:image\" content=\"card.png\"></head><body>Synthetic example.</body></html>"
+  },
+  "/empty": {
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "body": "<!doctype html><html><head></head><body>Supplied HTML without preview metadata.</body></html>"
+  },
+  "/missing": {
+    "status": 404,
+    "content_type": "text/html; charset=utf-8",
+    "body": "<html><head><title>Error-page title must not become a preview</title></head></html>"
+  },
+  "/binary": {
+    "status": 200,
+    "content_type": "image/png",
+    "body": "Authored non-image bytes served under an intentionally non-HTML content type."
+  }
+}

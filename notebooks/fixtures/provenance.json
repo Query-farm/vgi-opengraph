@@ -1,0 +1,23 @@
+{
+  "description": "Nine original authored stored-page records plus a synthetic loopback HTTP site. No live website or real user/business records. All labels/content invented. Existing pages.json bytes preserved.",
+  "source_revision": "cb0d5e1f4c0e85e4c63992120ee5a63324671c2f",
+  "license": "0BSD; bundled worker license",
+  "files": {
+    "pages.json": {
+      "sha256": "9603fe13594ea7a8bf1b25ce2f3e7c13fb71cb8ac043af629d16c7b21eefe9ef",
+      "bytes": 4006
+    },
+    "responses.json": {
+      "sha256": "a79b3eaa53d77feaba008911efeb09f5485c8940c8d851c2f7b5e59b6032eb5b",
+      "bytes": 1563
+    },
+    "requests.json": {
+      "sha256": "67ae747df6e78f38f03bc243c25e46c65cb4882bd7b58c8837d4e72bfc458194",
+      "bytes": 816
+    },
+    "LICENSE-worker.txt": {
+      "sha256": "3a050700300e105cf3ae2934282fdc5a966e17c8f609a6b8abfd1c56f730c50e",
+      "bytes": 684
+    }
+  }
+}

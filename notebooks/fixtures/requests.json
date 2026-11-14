@@ -1,0 +1,47 @@
+[
+  {
+    "request_id": "A",
+    "label": "Direct HTML",
+    "endpoint": "/article"
+  },
+  {
+    "request_id": "B",
+    "label": "Repeated direct URL",
+    "endpoint": "/article"
+  },
+  {
+    "request_id": "C",
+    "label": "Redirected HTML",
+    "endpoint": "/go"
+  },
+  {
+    "request_id": "D",
+    "label": "HTML without metadata",
+    "endpoint": "/empty"
+  },
+  {
+    "request_id": "E",
+    "label": "HTTP 404",
+    "endpoint": "/missing"
+  },
+  {
+    "request_id": "F",
+    "label": "Non-HTML response",
+    "endpoint": "/binary"
+  },
+  {
+    "request_id": "G",
+    "label": "Malformed URL",
+    "endpoint": "not a URL"
+  },
+  {
+    "request_id": "H",
+    "label": "Unsupported scheme",
+    "endpoint": "file:///synthetic"
+  },
+  {
+    "request_id": "I",
+    "label": "Missing URL",
+    "endpoint": null
+  }
+]
