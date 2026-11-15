@@ -13,7 +13,7 @@
 import { field, type VgiDataType, type VgiField } from "@query-farm/vgi";
 
 export const CATALOG_NAME = "opengraph";
-export const VERSION = "0.1.1";
+export const VERSION = "0.1.2";
 
 export const SOURCE_URL = "https://github.com/Query-farm/vgi-opengraph";
 
@@ -85,7 +85,16 @@ export const CATALOG_DOC_MD =
   "- Sensible fallbacks: missing `og:*` tags fall back to `twitter:*`, then `<title>`, " +
   "`<meta name=description>` and `<link rel=canonical>`.\n" +
   "- Relative image and page URLs resolved to absolute ones.\n\n" +
+  "## Sources and references\n\n" +
+  "- [The Open Graph protocol](https://ogp.me): the `og:*`, `article:*` and `product:*` properties " +
+  "the parser reads.\n" +
+  "- [oEmbed](https://oembed.com/): the embed-discovery `<link>` format reported alongside the tags.\n" +
+  "- [HTML `<meta>` element (WHATWG)](https://html.spec.whatwg.org/multipage/semantics.html#the-meta-element): " +
+  "the plain-HTML `name`/`content` metadata used as the fallback.\n\n" +
   "A [Query.Farm](https://query.farm) [VGI](https://query.farm/vgi) worker.";
+
+/** The schema's one-line comment; the richer Markdown lives in `SCHEMA_DOC_MD` (VGI102). */
+export const SCHEMA_COMMENT = "Scalars that parse or fetch Open Graph, Twitter Card and HTML link-preview metadata.";
 
 export const SCHEMA_DOC_LLM =
   "The `main` schema holds the Open Graph functions. The parse category works on HTML text with " +

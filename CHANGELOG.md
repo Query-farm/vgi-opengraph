@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.2 (2026-11-14)
+
+- Docs link to upstream sources: the catalog docs now link the Open Graph protocol, oEmbed and
+  the WHATWG HTML `<meta>` element (vgi-lint VGI183).
+- The `main` schema comment is now a one-line summary; its Markdown docs no longer repeat it
+  (vgi-lint VGI102).
+
 ## 0.1.1 (unreleased)
 
 - The catalog comment is now one plain-text sentence (under 300 characters) describing the worker's data, instead of the Markdown overview. The full overview remains in the catalog's `vgi.doc_md` and `vgi.doc_llm` tags.
