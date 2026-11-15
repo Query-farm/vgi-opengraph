@@ -5,7 +5,7 @@
  */
 
 import type { CatalogDescriptor, VgiFunction } from "@query-farm/vgi";
-import { CATALOG_DOC_MD, CATALOG_NAME, CATALOG_TAGS, SCHEMA_DOC_MD, SCHEMA_TAGS, SOURCE_URL } from "./meta.ts";
+import { CATALOG_COMMENT, CATALOG_NAME, CATALOG_TAGS, SCHEMA_DOC_MD, SCHEMA_TAGS, SOURCE_URL } from "./meta.ts";
 import { fetchOpengraph, opengraphTags, parseOpengraph, parseOpengraphWithBase } from "./opengraph.ts";
 
 export const FUNCTIONS: VgiFunction[] = [parseOpengraph, parseOpengraphWithBase, opengraphTags, fetchOpengraph];
@@ -40,7 +40,7 @@ const ALL_EXAMPLES = stampExampleQueries(FUNCTIONS);
 
 export const CATALOG: CatalogDescriptor = {
   name: CATALOG_NAME,
-  comment: CATALOG_DOC_MD,
+  comment: CATALOG_COMMENT,
   sourceUrl: SOURCE_URL,
   tags: CATALOG_TAGS,
   schemas: [

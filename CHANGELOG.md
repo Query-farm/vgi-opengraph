@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1 (unreleased)
+
+- The catalog comment is now one plain-text sentence (under 300 characters) describing the worker's data, instead of the Markdown overview. The full overview remains in the catalog's `vgi.doc_md` and `vgi.doc_llm` tags.
+
 ## 0.1.0 (2026-11-14)
 
 - `parse_opengraph(html)` / `parse_opengraph(html, base_url)`: Open Graph / Twitter Card / HTML

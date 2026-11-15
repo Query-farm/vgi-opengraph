@@ -13,7 +13,7 @@
 import { field, type VgiDataType, type VgiField } from "@query-farm/vgi";
 
 export const CATALOG_NAME = "opengraph";
-export const VERSION = "0.1.0";
+export const VERSION = "0.1.1";
 
 export const SOURCE_URL = "https://github.com/Query-farm/vgi-opengraph";
 
@@ -59,6 +59,10 @@ export function objectTags(opts: {
 export function column(name: string, type: VgiDataType, comment: string, nullable = true): VgiField {
   return field(name, type, nullable, new Map([["comment", comment]]));
 }
+
+/** One plain-text sentence: the catalog COMMENT directories show as the worker"s description. */
+export const CATALOG_COMMENT =
+  "Link-preview metadata from web pages: Open Graph, Twitter Card and plain HTML fallbacks such as title, description, canonical URL and favicon, parsed from HTML you already hold or fetched from URLs with per-row HTTP errors.";
 
 export const CATALOG_DOC_LLM =
   "Link-preview metadata for DuckDB: parse the Open Graph protocol (og:title, og:image, og:type, " +
